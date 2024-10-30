@@ -5,7 +5,8 @@ export default function NavBar() {
     <nav>
       <Link href="/"> Home </Link> |<Link href="/about"> About </Link>|
       <Link href="/foo"> Foo </Link>|<Link href="/blog"> Blog </Link>|
-      <Link href="/bar/2024/10/14"> Slug </Link>
+      <Link href="/bar/2024/10/14"> Slug </Link>|
+      <Link href="/rest-Api"> Axios </Link>
     </nav>
   );
 }

@@ -1,0 +1,20 @@
+{
+  "token": {
+    "access_token": "1t4a36kde5tdfed348trkjy4r5gtdfsd",
+    "userId": 0
+  },
+  "test": [
+    {
+      "id": 1,
+      "name": "kim",
+      "title": "data.json 파일 만들기",
+      "body": "project root에 생성"
+    },
+    {
+      "id": 2,
+      "name": "lee",
+      "title": "json-server를 설치하기",
+      "body": "아아아아아"
+    }
+  ]
+}

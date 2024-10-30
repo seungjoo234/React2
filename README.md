@@ -2,6 +2,162 @@
 
 # 202030229 임승주
 
+## 10월 30일 강의 내용
+
+### 서버가 데이터 불러오기
+
+- 서버에서는 두 가지 방법으로 HTTP 요청을 만들고 처리할 수 있다
+  1. Node의 내장 HTTP 라이브러리를 사용할 수 있다.  
+     다만 서드파티 HTTP 클라이언트와 비교했을 떄 설정하고 처리해야 할 작업이 더 많은 편이다.
+  2. HTTP 클라이언트 라이브러리를 사용할 수 있다.
+
+### 서버에서 REST API 사용하기
+
+- REST API를 호출할 때는 public API를 호출할 것인지, private API를 호출할 것인지 먼저 확인해야 한다.
+- Public API는 어떤 인증이나 권한도 필요없으며 누구나 사용 가능하다.
+
+### REST API - 개요
+
+- REST(Representational State Transfer)란 자원을 이름으로 구분하여 그 자원의 상태를 통신을 통해 주고 받는 것을 의미
+  1. HTTP URL(Uniform Resource Identifier: 통일된 자원 식별자)를 이용해서 자원(Resource)을 명시함
+  2. HTTP Method(POST, GET, PUT, DELETE, PATCH 등)를 통해 자원에 CRUD를 적용함
+- CRUD란 데이터 처리의 기본적인 기능을 나타냄
+  1. Create: 데이터 생성(POST)
+  2. Read: 데이터 조회(GET)
+  3. Update: 데이터 수정(PUT, PATCH)
+  4. Delete: 데이터 삭제(DELETE)
+- REST API란 REST의 규칙을 적용한 API를 의미함
+
+### REST API - 기본 설계 규칙
+
+- URL은 동사보다는 명사를, 대문자보다는 소문자를 사용하여야 함
+- 주소의 마지막에 슬래시(/)를 포함하지 않음
+- 단어를 연결할 때는 하이픈(-)을 사용함
+- 파일확장자는 URL에 포함하지 않음
+- URL에 메소드를 포함하지 않음
+
+### Json Server
+
+- Backend가 개발되기 전이나, 아직 외부 API.가 결정되지 않았다면 local에 Json Server를 구축하고 Frontend 개발을 하기에 적합한 node 패키지다.
+- 다음 명령으로 json-server를 설치한다.
+
+```
+$ npm i -g json-server
+```
+
+- 설치가 잘 되었는지 version을 확인해 본다.
+
+```
+$ json-server --version
+```
+
+- data.json 파일을 만들어 다음을 입력한다
+
+```jsx
+{
+  "token": {
+    "access_token": "1t4a36kde5tdfed348trkjy4r5gtdfsd",
+    "userId": 0
+  },
+  "test": [
+    {
+      "id": 1,
+      "name": "kim",
+      "title": "data.json 파일 만들기",
+      "body": "project root에 생성"
+    },
+    {
+      "id": 2,
+      "name": "lee",
+      "title": "json-server를 설치하기",
+      "body": "백엔드를 만들기 전에 이렇게 json 파일로 데이터를 만들어서 테스트 해보자"
+    }
+  ]
+}
+```
+
+### Axios란?
+
+- Next.js에서 REST API를 다룰 때는 보통 axios와 fetch 중 하나를 선택하는 경우가 많다.
+- 아래는 두가지 방법의 특징과 장단점을 비교한 내용이다.
+  1. [Axios]
+  - 간편한 문법: 기본적으로 JSON 데이터를 자동으로 변환해주므로, res.data로 쉽게 접근할 수 있다.
+  - HTTP 요청 취소: 요청을 취소할 수 있는 기능이 내장되어 있다.
+  - 요청 및 응답 인터셉터: 요청이나 응답을 가로채어 수정할 수 있는 기능이 있어, 인증 토큰 추가와 같은 작업이 간편하다.
+  - 진보된 오류 처리: HTTP 오류 코드에 따라 에러를 더 쉽게 처리할 수 있다
+  - 단점은 추가 패키지를 설치해야 하며, 코드 크기가 약간 증가한다는 것이다. 그러나 크게 차이가 안난다
+  2. [Fetch API]
+  - 내장 API: 브라우저에 내장되어 있어 별도의 설치가 필요 없다.
+  - Promis 기반: 비동기 작업을 처리하는데 익숙한 구조다.
+  - 스트림 처리: 데이터를 스트리밍으로 처리할 수 있는 기능이 있어, 큰 파일을 처리하는데 유용하다.
+  - 단점은 json 변환 수동 처리: 응답에서 json으로 변환할 떄 res.json()을 호출해야 함
+  - 에러 처리 복잡성: HTTP 오류 코드 (예: 404, 500)에 대한 처리가 약간 더 복잡할 수 있다. 기본적으로 fetch는 네트워크 오류만을 reject한다
+  3. [결론]
+  - 복잡한 요청이나 에러 처리가 필요한 경우에는 axios가 더 적합할 수 있다.
+  - 간단한 요청이나 내장된 기능을 활용하고 싶다면 fetch를 사용하는 것도 좋은 선택이다.
+  - 어떤 것을 선택할지는 프로젝트의 요구 사항과 개발자의 선호도에 따라 다를 수 있다.
+
+### Axios 설치
+
+- axios를 설치 하려면 다음 명령어를 사용 한다.
+
+```
+$ npm i axios
+```
+
+### Axios 사용하기
+
+- 다음은 간단한 사용법이다.
+
+```jsx
+const res = await axios.get("https://api.example.com");
+const products = res.data; // Axios에서 응답 본문의 데이터를 가져옴
+```
+
+- axios.get()을 통해 받아온 응답 객체인 res는 단순히 JSON 데이터만 담고 있는 것이 아니라, HTTP 통신과 관련된 여러 정보들을 함께 포함하고 있다.  
+  예를 들어
+  - res.status: HTTP 응답 상태 코드 (예: 200, 404, 500 등)
+  - res.headers: 서버로부터 받은 헤더 정보
+  - res.config: 요청에 대한 설정 정보
+  - res.statusText: 응답 상태에 대한 설명 (예: "OK")
+  - res.data: 서버가 실제로 전송한 데이터 (이 부분이 가장 중요한 응답 내용)
+- 따라서 res.data는 서버가 전송한 실제 데이터에 접근하는 속성이다.
+- 브라우저를 통해서 출력을 확인해 보자
+
+```jsx
+import axios from "axios";
+export default async function RestApi() {
+  const res = await axios.get("http://localhost:3001/test");
+  const users = res.data;
+  console.log(users);
+
+  return (
+    <>
+      <h1>axios</h1>
+      {users.map((user, id) => {
+        return (
+          <div key={id}>
+            <h2>{user.id}</h2>
+            <h3>{user.name}</h3>
+            <h3>{user.title}</h3>
+            <h3>{user.body}</h3>
+          </div>
+        );
+      })}
+    </>
+  );
+}
+```
+
+- 그런데 위의 코드는 비동기 데이터 로딩과 상태 관리가 제대로 고려되지 않았기 때문에 몇가지 문제가 있을 수 있다.
+- 특히 Next.js와 같은 리액트 기반 앱에서 비동기 데이터를 처리할 때 렌더링 주기에 맞게 상태를 관리해야 한다
+- [개선할 부분]
+  1. useState와 useEffect 사용:
+  - 비동기 데이터를 가져오는 작업은 컴포넌트의 상태(state)로 관리하는 것이 일반적이다. 현재 코드에서는 users 데이터가 비동기적으로 로드되는데, 이를 관리하기 위한 useState와 useEffect 훅이 빠져 있다.
+  - 데이터를 로드하기 전에 컴포넌트가 렌더링되기 때문에, users 변수가 초기에는 존재하지 않아 undefined 에러가 발생할 가능성이 있다.
+  2. Loading 상태 처리
+  - 데이터를 불러오는 동안 사용자가 기다릴 수 있도록 로딩 상태를 추가하는 것이 좋다.
+
 ## 10월 23일 강의 내용
 
 ### Static Resource
