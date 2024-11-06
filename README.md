@@ -2,6 +2,62 @@
 
 # 202030229 임승주
 
+## 11월 06일 강의 내용
+
+### Styled JSX
+
+- Styled JSX는 CSS-in-JS라이브러리이다. 내장 모듈이기 때문에 설치가 필요 없다.
+- 즉, CSS 속성 지정을 위해 자바스크립트를 사용할 수 있는 라이브러리이다.
+
+### CSS-in-JS의 단점
+
+- IDE나 코드 편집기 등 개발 도구에 대한 지원이 부족함
+- 문법 하이라이팅, 자동 완성, 린트(lint)기능을 제공하지 않음
+- 코드 내에서 CSS에 대한 의존성이 점점 커지기 때문에 앱 번들도 커지고 느려짐
+- 서버에 미리 CSS를 생성해도 클라이언트에서 리액트 하이드레이션이 끝나면 CSS를 다시 생성해야 함
+- 이 때문에 실행 시점에 부하가 커지며, 웹 앱이 계속 느려지게 됨. 기능을 추가 할 수록 이런 현상은 심해짐
+
+### CSS Module
+
+- CSS-in-JS의 단점을 회피하기 위한 좋은 방법은 바로 CSS Module이다.
+- .module.css로 끝나는 파일에서 CSS 클래스를 가지고 옴
+- Home.module.css 파일은 일반적인 CSS 파일이지만 CSS Module이 그 내용을 자바스크립트 객체로 변환함
+- 변환한 객체에서 모든 키는 클래스 이름을 가리킴
+- 클래스들은 컴포넌트 스코프를 가짐
+- Styled JSX때 와 마찬가지로 이런 고유한 이름 때문에 다른 파일이라면 같은 class명을 사용해도 충돌이 안일어남
+- 만일 전역 CSS를 선언하고 싶다면 styles/globals.css를 만들고 사용함
+- 파일명은 반드시 globals가 아니어도 되지만 암묵적 합의는 가능하면 지키는 것이 좋음
+- 또 한가지 방법은 class로 선언된 요소에 :global 키워드를 추가해 준다. .button :global{}
+- 셀렉터 컴포지션은 통상적으로 사용할 수 있는 css를 만들고 compose 속성을 지정해서 일부 속성을 덮어쓰는 기능이다.
+
+```css
+.button-default {
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+}
+
+.button-success {
+  composes: button-default;
+  background-color: green;
+  color: white;
+}
+
+.button-danger {
+  composes: button-default;
+  background-color: red;
+  color: white;
+}
+```
+
+### SASS
+
+- Next에서 기본으로 지원하는 전 처리기
+- 단 패키지 설치가 필요함. $ npm install sass
+- SASS 및 SCSS(Sassy CSS) 문법으로 CSS Module을 만들고 사용할 수 있음
+- styles/Home.module.css 파일을 styles/Home.module.scss로 바꿔주면 좋음
+- SASS 기본 설정을 변경해야 하는 경우 next.config.js 설정파일을 변경한다.
+
 ## 10월 30일 강의 내용
 
 ### 서버가 데이터 불러오기
