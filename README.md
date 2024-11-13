@@ -2,6 +2,101 @@
 
 # 202030229 임승주
 
+## 11월 13일 강의 내용
+
+### UI 라이브러리
+
+- UI 라이브러리, 프레임워크, 유틸리티 기능이 필수는 아님
+- 다만 생산성 향상 및 UI의 일관성을 유지하는데 많은 도움을 받을 수 있음
+- 3가지의 프레임워크
+- Chakra UI
+- TailwindCSS
+- Headless UI
+
+### Chakra UI
+
+- 오픈소스 컴포넌트 라이브러리로, 모듈화 되어 있고 접근성이 뛰어나며 보기 좋은 UI를 만들 수 있다
+- 버튼, 모달, 입력 등 다양한 내장 컴포넌트를 제공함
+- dark mode 및 light mode를 모두 지원함
+- Chakra UI의 useColorMode 훅을 사용해서 현재 사용하는 컬러 모드를 확인할 수 있음
+- 기본 컴포넌트를 조합해서 새로운 컴포넌트를 쉽게 만들 수 있음
+- 타입스크립트로 작성 되었으며 개발자에게 최고의 개발 경험을 제공함
+- 사이트를 방문해 보면 React와 Next에 특화된 것으로 보임
+- https://chakra-ui.com/
+
+### TailwindCSS
+
+- 다른 프레임워크와는 다르게 CSS 규칙만을 제공함
+- 자바스크립트 모듈이나 리액트 컴포넌트를 제공하지 않기 때문에 필요한 경우 직접 만들어서 사용해야 함
+- 변수값을 조정하여 개성있는 디자인을 만들 수 있음. 디자인의 자유도가 높음
+- 다크모드 및 라이트모드를 쉽게 적용할 수 있음
+- 빌드 시점에 사용하지 않는 클래스는 제거 되기 때문에 높은 수준의 최적화를 지원함
+- CSS 클래스의 접두사를 활용해서 모바일, 데스크톱, 태블릿 화면에서 원하는 규칙을 지정할 수 있음
+- https://tailwindcss.com/
+
+### Headless UI
+
+- TailwindCSS를 만든 Tailwind Labs 팀의 무료 오픈소스 프로젝트이다.
+- TailwindCSS는 웹 컴포넌트 안에서 사용할 수 있는 CSS클래스만 제공함
+- 따라서 모달이나 버튼 등 동적인 컴포넌트를 만들려면 직접 자바스크립트 코드를 작성해야 함
+- 이런 단점을 보완하기 위해서 Headless UI가 탄생함
+- Headless UI는 CSS클래스를 제공하는 것이 아니라 동적 컴포넌트만 제공함
+- https://headlessui.com/
+
+### 1. Project 생성
+
+- Tailwind 사용을 위해 프로젝트를 다시 생성한다
+- 프로젝트를 다시 생성하지 않고 설정할 수도 있지만 과정이 다소 복잡함
+- 프로젝트는 Next.js 14로 한다
+- 15.0.2 버전이 릴리즈 되어 있으나 아직 Tailwind와의 호환성이 안정적이지 않음
+
+```
+$ npx create-next-app@14
+```
+
+- 프로젝트 이름은 자유로 하고, 나머지는 모두 yes로 함
+
+### 2. Tailwind CSS
+
+- 구글에서 tailwind를 검색하고 사이트에 접속함
+- Home 화면에서 Tailwind에서 가능한 것들을 확인할 수 있음
+- Get started 버튼을 클릭하면 설치과정에서 부터 설정, 간단한 사용법을 확인한다.
+- Framework Guides 탭에서 Next.js를 클릭하고 내용을 확인한다.
+  - 프로젝트를 tailwind 사용으로 생성했으면 이 과정은 생략한다.
+- App/tailwind/page.js 파일을 생성하고, 마지막에 있는 hello world!를 실행해 본다.
+- Tailwind는 React를 기준으로 하고 있어서 바로 코드를 사용하면 오류가 발생할 수 있다
+- Test 코드는 tailwindcss.com에 나와 있는것이 오류가 적음
+- tailwindcss.com의 Doc를 참고하여 테스트해 보자
+- 테스트 과정에서 img태그 등 몇가지는 추가로 설정하지 않으면 오류가 발생함
+- class도 className으로 수정해야 함
+
+### 3. Headless UI
+
+- 구글에서 headless ui를 검색하고 사이트에 접속한다
+- Home 화면에서 GitHub 아이콘을 클릭하면 일반 사항을 확인할 수 있다
+- App/headless/page.js 파일을 생성한다
+- Dropdown Menu를 테스트한다
+- 버튼을 테스트하고 tailwind class를 수정해 본다
+
+### 4. Chakra UI
+
+- 구글에서 Chakra UI를 검색하고 사이트에 접속한다
+- Home 화면에서 Start Building 버튼을 클릭하고 Next.js를 선택한다
+- App/chakra/page.js 파일을 생성한다
+- 지시대로 설치한다
+- Snippets를 설치하면 src/components/ui 아래 추가 componen이 설치됨
+- Layout에 provider를 설정한다
+- tsconfig 설정을 확인해 본다. 전부 설정되어 있으나 없는 것이 있으면 추가해 준다
+- next.config.mjs를 수정해 준다
+- Component 메뉴에서 Accordion을 테스트한다
+
+### 5. React-icon
+
+- 구글에서 React icon을 검색하고 사이트에 접속한다
+- Home 화면에서 원하는 아이콘을 클릭하면 사용코드를 확인할 수 있다
+- App/react-icon/page.jsx 파일을 생성한다
+- 아이콘을 사용해 본다
+
 ## 11월 06일 강의 내용
 
 ### Styled JSX
