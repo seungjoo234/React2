@@ -2,6 +2,125 @@
 
 # 202030229 임승주
 
+## 11월 20일 강의 내용
+
+### 1. Props 흐름의 이해
+
+- Next.js의 데이터 흐름은 단방향으로 이루어 짐
+- 즉, parents에서 child component의 방향으로 props의 흐름이 이루어 짐
+- 따라서 계층 구조가 복잡해 지면 Props Drilling 문제가 발생함
+- Props Drilling은 여러 개의 component를 지나 props가 전달 되면서 발생하는 문제
+- Props Drilling은 다음과 같은 문제를 발생 시킬 수 있음
+  1. 중간에 위치한 component에 불필요한 props를 전달해야 하는 문제
+  2. 타겟 component까지 props가 전달되지 않을 경우 원인 규명의 어려움
+  3. 필요 이상으로 코드가 복잡해지는 문제
+- 이런 문제를 해결하려면 props를 전역을 사용하면 됨
+- Next.js에서 props를 전역으로 사용하기 위해서 Context API, Redux 등을 사용함
+- Component A, B, C, props-flow 페이지 상호간에는 계층구조를 가지고 있지 않음
+- 아직 어느 쪽에서도 component 호출하지 않았기 때문
+- 그러나 어느 쪽이든 component를 호출 하는 순간, 호출한 쪽은 parent가 되고, 호출 받은 쪽은 child가 됨
+- 이것은 component간, component와 page간 모두에 적용됨
+- 관계가 한번 성립되면 child가 parent를 호출할 수는 없음
+- 예를 들어 A가 B를 호출한 경우, A는 parent, B는 child가 됨
+- 이 관계는 아직 아무도 호출하지 않거나, 호출 받지 않은 C에게는 적용되지 않음
+- 즉, C는 A,B 모두 호출 할 수 있게 됨. 이 경우 C가 parent, A와 B가 child가 됨
+- A와 B의 관계, C와 A,B의 관계가 공존하게 됨
+- A는 B만 호출 할 수 있고, C는 AB 모두를 호출 할 수 있으며 그 반대는 불가능함
+
+### 2. Context API 개요
+
+- Context는 UX구축에 많이 사용되는 React의 기능
+- React는 16.3 버전부터 정식적으로 context api를 지원하고 있음
+- 일반적으로 props는 부모에서 자식으로 전달되는 단방향 통신을 함
+- Context API는 특정 component가 props를 사용하지 않고, 하위 component를 포함한 모든 component에 데이터를 공유할 수 있는 기능을 제공함
+- 즉 "**전역**"으로 데이터를 사용할 수 있도록 해줌
+- 예를 들어 사용자의 로그인 상태나, 쇼핑커트의 물품 수량 등을 표시할 때 사용함
+- Context API는 createContext, Provider, useContext 개념만 알면 적용이 가능함
+- 간혹 Consumer를 useContext대신 사용하는 경우가 있지만, function형 component에서는 많이 사용하지 않음
+- 두가지의 차이는 다음과 같다
+
+| 특징 | Consumer                                                          | useContext                                                         |
+| ---- | ----------------------------------------------------------------- | ------------------------------------------------------------------ |
+| 사용 | 클래스형, 함수형 컴포넌트 모두 사용 가능                          | 함수형 컴포넌트에서 주로 사용                                      |
+| 문법 | JSX 내에서 명시적으로 작성                                        | Hook으로 간결하게 사용                                             |
+| 장점 | 클래스형 컴포넌트와의 호환성                                      | - 간결하고 직관적인 코드 작성, 함수형 컴포넌트와의 자연스러운 통합 |
+| 단점 | -jsx 내에 추가적인 요소가 필요, - 코드가 다소 복잡해 보일 수 있음 | 클래스형 컴포넌트에서는 사용할 수 없음                             |
+
+### 2. Context API - use client
+
+- 앞서 작성한 코드 상단에 'use client' 지시문이 있음
+- Next.kjs에서 'use client'를 사용하는 이유는 서버 컴포넌트와 클라이언트 컴포넌트를 구분하기 위해서임
+- Next.js는 기본적으로 서버에서 렌더링하도록 설계되어, 클라이언트에서만 필요한 컴포넌트를 명시적으로 지정해야 할 필요가 있음
+- 'use client'를 컴포넌트 상단에 선언하면 해당 컴포넌트는 클라이언트레서만 렌더링 되며, 주로 상태 관리나 브라우저 전용 API 사용이 필요한 경우에 사용됨
+
+### 3.1 Directory 구조
+
+- [Directory]
+  - app: Routing Page 관리
+  - components: 재사용 가능한 공통 컴포넌트 관리
+  - context: context 컴포넌트 관리
+  - features: 기능별 컴포넌트 관리
+  - store: Redux store 설정 파일 관리
+  - style: CSS, Sass 등 스타일 파일 관리
+- [components Directory]
+  - 애플리케이션 전반에서 재사용될 수 있는 공통 컴포넌트를 보관함
+  - 특정 기능에 종속되지 않으며, 다양한 페이지나 기능에서 재사용할 수 있는 component를 모아 둠
+  - (예시)
+    - src/components/Button.js(버튼 컴포넌트)
+    - src/components/NavBar.js(네비게이션 바)
+    - src/components/Footer.js(푸터 컴포넌트)
+    - src/components/Modal.js(모달 컴포넌트)
+- [features Directory]
+  - 특정 기능이나 도메인 별로 코드를 구성하는 데 사용함
+  - 사용자 인증 기능, 프로필 관리 기능 등 각 기능과 관련된 상태 관리, API 요청, 슬라이스, 컴포넌트 등을 보관함
+  - 재 사용이 불가능하거나 가능하더라도 많은 수정을 해야 하는 컴포넌트를 관리함
+  - (예시)
+    - src/features/counter/counterSlice.js(상태 관리)
+    - src/features/counter/Counter.js(기능 관련 컴포넌트)
+    - src/features/user/userSlice.js(사용자 관련 상태 컴포넌트)
+    - src/features/user/userProfile.js(사용자 프로필 컴포넌트)
+
+### 3.2 Redux 주요 File 역할
+
+- [Redux Slice]
+  - Slice는 Redux Toolkit에서 사용되는 용어로, 특정 기능과 관련된 상태와 reducer 함수의 모음을 나타냄
+  - Slice라는 이름은 애플리케이션 상태의 한 부분을 의미함
+  - Redux Toolkit의 createSlice 함수를 사용하면 특정 기능과 관련된 상태, 액션, reducer를 한 곳에서 정의할 수 있어 관리하기 용이함
+  - (예시)
+    - src/features/counter/counterSlice.js(counter 상태 관리)
+    - src/features/counter/Counter.js(counter 기능 관련 컴포넌트)
+- [Redux Provider]
+- Redux Provider는 Redux의 상태 등을 공급하기 위한 파일임
+- Provider는 사용하고자 하는 page에서 사용하면 됨
+- 다만 전역적으로 사용할 때 layout 파일에 정의하면 'use client'를 사용해야 하기 때문에 별도의 component로 만들어서 사용하는 것이 좋음
+- (예시)
+- src/store/store.js(counter 상태 관리)
+- src/store/CounterProvider(counter 기능 관련 컴포넌트)
+
+### 4. Context API vs Redux
+
+- [Context API]
+  - React에서 기본으로 제공하는 상태 관리 도구로, 외부 라이브러리 설치 없이 사용 가능함
+  - Context API는 주로 전역 상태를 관리하는 데 사용됨
+  - React.createContext()로 생성한 Context 객체와 Provider 컴포넌트를 사용해 상태를 하위 컴포넌트에 전달함
+  - (장점)
+    - 간단하고 가볍다: 외부 라이브러리 설치 없이 기본 React 기능만으로 전역 상태 관리를 할 수 있음
+    - 적은 설정 필요: 간단한 구조를 가지고 있어 설정과 사용이 간편함
+    - 컴포넌트 트리의 깊이 제한 없음: 여러 단계에 걸쳐 상태를 전파할 수 있어 prop drilling 문제를 해결함
+  - (단점)
+    - 복잡한 상태 관리의 한계: 상태가 복잡라거나 다양한 액션을 통해 변경이 이루어져야 하는 경우, 관리가 어려워질 수 있음
+    - 성능 문제: 상태가 업데이트 되면 해당 상태를 사용하는 모든 하위 컴포넌트가 다시 렌더링 되므로, 상태 범위가 넓을 경우 성능에 영향을 미칠 수 있음
+    - 디버깅 도구 부족: 상태 변경 과정을 추적하고 관리하는 Redux DevTools와 같은 도구가 기본적으로 제공되지 않음
+- [Redux]
+  - Redux는 전역 상태를 관리하기 위한 독립적인 state 관리 라이브러리임
+  - 상태의 변경을 예측 가능하게 하고, 전역 state 관리를 더 구조적으로 지원함
+  - store, reducer, action 등의 개념을 사용해 state와 state dispatch를 관리함
+  - (장점)
+    - 명확한 상태 관리 구조: 액션과 reducer를 통해 state dispatch 과정을 예측 가능하게 만들고, 코드의 가독성을 높임
+    - 미들웨어 지원: redux-thunk, redux-saga와 같은 미들웨어를 사용해 비동기 로직을 쉽게 처리할 수 있음
+    - 디버깅 도구: Redux DevTools를 통해 상태 변화 및 디버깅이 용이함
+    - 모든 프레임워크와 호환: React뿐만 아니라 다른 JavaScript 프레임워크와도 함께 할 수 있음
+
 ## 11월 13일 강의 내용
 
 ### UI 라이브러리
