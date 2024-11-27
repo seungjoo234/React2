@@ -4,6 +4,7 @@ import "./globals.css";
 import { Provider } from "@/components/ui/provider";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import ThemeToggleButton from "@/components/ui/ThemeToggleButton";
+import CounterProvider from "@/store/CounterProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -28,14 +29,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <ThemeProvider>
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <Provider>{children}</Provider>
-          <ThemeToggleButton />
-        </body>
-      </ThemeProvider>
+      <CounterProvider>
+        <ThemeProvider>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <Provider>{children}</Provider>
+            <ThemeToggleButton />
+          </body>
+        </ThemeProvider>
+      </CounterProvider>
     </html>
   );
 }
