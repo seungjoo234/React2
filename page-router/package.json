@@ -1,4 +1,5 @@
 {
+  "homepage": "https://seungjoo234.github.io/PAGE-ROUTER",
   "name": "page-router",
   "version": "0.1.0",
   "private": true,
@@ -6,12 +7,15 @@
     "dev": "next dev",
     "build": "next build",
     "start": "set PORT=3001 && next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d out"
   },
   "dependencies": {
+    "gh-pages": "^6.2.0",
+    "next": "14.2.7",
     "react": "^18",
-    "react-dom": "^18",
-    "next": "14.2.7"
+    "react-dom": "^18"
   },
   "devDependencies": {
     "eslint": "^8",
